@@ -1,0 +1,1621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FeastExpress | Food Delivery &amp; Live GPS Tracking</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Top Offer Strip -->
+  <div class="top-strip">
+    <span>🔥 Today's Specials: Use <strong>FEAST100</strong> for ₹100 OFF (min ₹299) • <strong>SAVE20</strong> for 20% OFF • Free Delivery above ₹399</span>
+  </div>
+
+  <!-- Sticky Navigation Bar -->
+  <header class="navbar">
+    <div class="container nav-inner">
+      <a href="#home" class="brand">
+        <span class="brand-logo">🛵</span>
+        <span class="brand-text">Feast<span>Express</span></span>
+      </a>
+
+      <!-- Delivery Location Picker + Live GPS Access -->
+      <div class="location-box">
+        <span class="loc-icon">📍</span>
+        <select id="citySelect" aria-label="Choose delivery city">
+          <option value="Vijayawada, Andhra Pradesh">Vijayawada, AP</option>
+          <option value="Hyderabad, Telangana">Hyderabad, TS</option>
+          <option value="Bengaluru, Karnataka">Bengaluru, KA</option>
+          <option value="Mumbai, Maharashtra">Mumbai, MH</option>
+          <option value="New Delhi, Delhi">New Delhi, DL</option>
+          <option value="Chennai, Tamil Nadu">Chennai, TN</option>
+        </select>
+        <button type="button" class="gps-trigger" id="detectGpsBtn" title="Access device GPS location">
+          Use GPS
+        </button>
+      </div>
+
+      <!-- Page Navigation -->
+      <nav class="nav-links" aria-label="Main navigation">
+        <a href="#famous">Famous Foods</a>
+        <a href="#restaurants">Restaurants</a>
+        <a href="#dishes">Popular Dishes</a>
+        <a href="#offers">Offers</a>
+      </nav>
+
+      <!-- Live Tracker & Cart Buttons -->
+      <div class="nav-actions">
+        <button type="button" class="btn-track-nav" id="openTrackerBtn">
+          📡 Track Live
+        </button>
+        <button type="button" class="btn-cart-nav" id="openCartBtn">
+          🛒 Cart <span class="cart-badge" id="cartCount">0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section with Full-Bleed Food Background Image -->
+  <section class="hero" id="home">
+    <div class="container hero-content">
+      <div class="hero-tags-top">
+        <span class="hero-pill">⚡ 25-Min Express Delivery</span>
+        <span class="hero-pill gps-pill" id="gpsStatusBadge">📍 Location Ready</span>
+      </div>
+
+      <h1>India's Most Famous Flavours, Delivered Hot &amp; Tracked Live.</h1>
+      <p>
+        Order authentic Hyderabadi Dum Biryani, Udupi Ghee Dosa, Old Delhi Butter Chicken,
+        Mumbai Pav Bhaji, and neighbourhood favourites with real-time GPS delivery tracking.
+      </p>
+
+      <!-- Live Working Search Bar -->
+      <form class="search-bar" id="heroSearchForm">
+        <span class="search-icon">🔍</span>
+        <input
+          type="text"
+          id="searchInput"
+          placeholder="Search dish, restaurant, or famous city (e.g., Biryani, Hyderabad, Dosa, Pizza)..."
+          aria-label="Search dishes, restaurants, or cities"
+        />
+        <button type="button" id="clearSearchBtn" class="clear-search-btn" aria-label="Clear search" hidden>&times;</button>
+        <button type="submit" class="btn btn-primary">Search</button>
+      </form>
+
+      <!-- Quick Search Buttons -->
+      <div class="quick-searches">
+        <span>Try searching:</span>
+        <button type="button" onclick="quickSearch('Biryani')">Hyderabadi Biryani</button>
+        <button type="button" onclick="quickSearch('Dosa')">Masala Dosa</button>
+        <button type="button" onclick="quickSearch('Butter Chicken')">Butter Chicken</button>
+        <button type="button" onclick="quickSearch('Mumbai')">Mumbai Pav Bhaji</button>
+        <button type="button" onclick="quickSearch('Pizza')">Margherita Pizza</button>
+      </div>
+
+      <div class="hero-metrics">
+        <div><strong>6+</strong><span>Partner Kitchens</span></div>
+        <div><strong>12</strong><span>Signature Dishes</span></div>
+        <div><strong>Live GPS</strong><span>Rider Map</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Food Categories Section -->
+  <section class="section" id="categories">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <h2>Food Categories</h2>
+          <p>Tap any category to filter the menu instantly.</p>
+        </div>
+      </div>
+      <div class="categories-strip" id="categoriesStrip"></div>
+    </div>
+  </section>
+
+  <!-- Famous Foods & Where They Are Famous Section -->
+  <section class="section section-tinted" id="famous">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <span class="eyebrow">🇮🇳 Famous Regional Specialities</span>
+          <h2>Famous Foods &amp; Where They Are Famous</h2>
+          <p>Every iconic dish comes with its city of origin, culinary story, and instant order button.</p>
+        </div>
+      </div>
+      <div class="famous-grid" id="famousGrid"></div>
+    </div>
+  </section>
+
+  <!-- Offers & Promo Codes Section -->
+  <section class="section" id="offers">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <h2>Exclusive Offers &amp; Coupons</h2>
+          <p>Click any offer card to apply the promo code directly to your cart.</p>
+        </div>
+      </div>
+
+      <div class="offers-grid">
+        <div class="offer-card offer-sunset">
+          <span class="offer-label">MOST POPULAR</span>
+          <h3>Flat ₹100 OFF</h3>
+          <p>Applicable on orders of ₹299 or more across all partner restaurants.</p>
+          <div class="offer-foot">
+            <code>FEAST100</code>
+            <button type="button" class="btn-offer-white" onclick="applyCouponQuick('FEAST100')">Apply Offer</button>
+          </div>
+        </div>
+
+        <div class="offer-card offer-violet">
+          <span class="offer-label">SUPER SAVER</span>
+          <h3>Flat 20% OFF</h3>
+          <p>Save 20% instantly on Biryanis, Curries, Pizzas, Momos, and Desserts.</p>
+          <div class="offer-foot">
+            <code>SAVE20</code>
+            <button type="button" class="btn-offer-white" onclick="applyCouponQuick('SAVE20')">Apply Offer</button>
+          </div>
+        </div>
+
+        <div class="offer-card offer-teal">
+          <span class="offer-label">ZERO FEE</span>
+          <h3>Free Express Delivery</h3>
+          <p>Waive the ₹39 delivery charge on any order total — no minimum spend.</p>
+          <div class="offer-foot">
+            <code>FREEDEL</code>
+            <button type="button" class="btn-offer-white" onclick="applyCouponQuick('FREEDEL')">Apply Offer</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Restaurant Cards Section -->
+  <section class="section section-tinted" id="restaurants">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <h2>Top Restaurants Near <span id="activeCityHeading">Vijayawada, Andhra Pradesh</span></h2>
+          <p>Click any restaurant card to view its dedicated menu below.</p>
+        </div>
+        <button type="button" class="btn btn-outline btn-sm" id="clearRestBtn" onclick="clearRestaurantFilter()" hidden>
+          Show All Restaurants
+        </button>
+      </div>
+      <div class="restaurants-grid" id="restaurantsGrid"></div>
+    </div>
+  </section>
+
+  <!-- Popular Dishes Section -->
+  <section class="section" id="dishes">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <h2>Popular Dishes</h2>
+          <p id="menuSubtitle">Showing all 12 dishes ready for express delivery.</p>
+        </div>
+
+        <div class="menu-controls">
+          <label class="veg-switch">
+            <input type="checkbox" id="vegOnlyToggle" />
+            <span class="veg-indicator"></span>
+            Pure Veg Only
+          </label>
+          <select id="sortSelect" aria-label="Sort popular dishes">
+            <option value="default">Sort: Recommended</option>
+            <option value="price-low">Price: Low to High</option>
+            <option value="price-high">Price: High to Low</option>
+            <option value="rating">Top Rated</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Active Filter Bar -->
+      <div class="active-filter-bar" id="activeFilterBar" hidden>
+        <span id="activeFilterText"></span>
+        <button type="button" class="btn btn-outline btn-sm" onclick="resetAllFilters()">Reset All Filters</button>
+      </div>
+
+      <!-- Dishes Cards Grid -->
+      <div class="dishes-grid" id="dishesGrid"></div>
+
+      <!-- Empty Search State -->
+      <div class="empty-state" id="emptyState" hidden>
+        <h3>No matching dishes found</h3>
+        <p>Try searching a different dish or city name, or reset your active filters.</p>
+        <button type="button" class="btn btn-primary" onclick="resetAllFilters()">Show Full Menu</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Live Delivery Tracking Showcase Strip -->
+  <section class="tracker-banner">
+    <div class="container tracker-banner-inner">
+      <div>
+        <span class="eyebrow-light">🛰️ Real-Time Delivery Location Tracking</span>
+        <h2>Follow Your Order Step-by-Step on the Live Map</h2>
+        <p>
+          Access your GPS coordinates, view live kitchen-to-doorstep progress, and check rider ETA anytime.
+        </p>
+      </div>
+      <button type="button" class="btn btn-primary btn-lg" onclick="openTrackerModal()">
+        Open Live Tracking Map →
+      </button>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div>
+        <a href="#home" class="brand footer-brand">
+          <span class="brand-logo">🛵</span>
+          <span class="brand-text">Feast<span>Express</span></span>
+        </a>
+        <p class="footer-note">
+          Serving India's most famous regional dishes and neighbourhood kitchens with verified quality and live GPS delivery tracking.
+        </p>
+      </div>
+      <div>
+        <h4>Quick Navigation</h4>
+        <ul>
+          <li><a href="#famous">Famous Regional Foods</a></li>
+          <li><a href="#restaurants">Partner Restaurants</a></li>
+          <li><a href="#dishes">Popular Dishes</a></li>
+          <li><a href="#offers">Coupons &amp; Deals</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Customer Support</h4>
+        <ul>
+          <li>Live GPS Rider Tracking</li>
+          <li>Free Delivery above ₹399</li>
+          <li>UPI, Cards &amp; Cash on Delivery</li>
+          <li>Helpdesk: support@feastexpress.in</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 FeastExpress Food Delivery. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- Slide-Over Shopping Cart Drawer -->
+  <div class="backdrop" id="cartOverlay" hidden></div>
+  <aside class="cart-drawer" id="cartDrawer" aria-label="Shopping Cart">
+    <div class="drawer-head">
+      <h3>Your Order Cart</h3>
+      <button type="button" class="close-x" id="closeCartBtn" aria-label="Close cart">&times;</button>
+    </div>
+
+    <div class="cart-loc-bar">
+      <span>📍 Delivering to: <strong id="cartDeliveryCity">Vijayawada, Andhra Pradesh</strong></span>
+      <button type="button" class="link-danger" id="clearCartBtn" hidden>Clear Cart</button>
+    </div>
+
+    <div class="free-delivery-bar" id="freeDeliveryBar"></div>
+
+    <div class="cart-items" id="cartItems"></div>
+
+    <div class="cart-foot">
+      <div class="coupon-box">
+        <input type="text" id="couponInput" placeholder="Promo: FEAST100, SAVE20, FREEDEL" />
+        <button type="button" class="btn btn-outline btn-sm" id="applyCouponBtn">Apply</button>
+        <button type="button" class="btn btn-outline btn-sm" id="removeCouponBtn" hidden>&times;</button>
+      </div>
+      <p class="coupon-msg" id="couponMsg"></p>
+
+      <div class="bill-box">
+        <div class="bill-line">
+          <span>Item Total</span>
+          <span id="billSubtotal">₹0</span>
+        </div>
+        <div class="bill-line bill-discount" id="billDiscountRow" hidden>
+          <span id="billDiscountLabel">Coupon Discount</span>
+          <span id="billDiscount">-₹0</span>
+        </div>
+        <div class="bill-line">
+          <span>Delivery Charge</span>
+          <span id="billDelivery">₹0</span>
+        </div>
+        <div class="bill-line">
+          <span>GST (5%)</span>
+          <span id="billGst">₹0</span>
+        </div>
+        <div class="bill-line bill-total">
+          <span>Grand Total</span>
+          <span id="billTotal">₹0</span>
+        </div>
+      </div>
+
+      <button type="button" class="btn btn-primary btn-full" id="proceedCheckoutBtn" disabled>
+        Proceed to Checkout
+      </button>
+    </div>
+  </aside>
+
+  <!-- Dish Details Quick-View Modal -->
+  <div class="modal-backdrop" id="dishModal" hidden>
+    <div class="modal-box dish-modal-box">
+      <button type="button" class="close-x modal-close" id="closeDishModalBtn" aria-label="Close details">&times;</button>
+      <div id="dishModalBody"></div>
+    </div>
+  </div>
+
+  <!-- Checkout Modal -->
+  <div class="modal-backdrop" id="checkoutModal" hidden>
+    <div class="modal-box">
+      <button type="button" class="close-x modal-close" id="closeCheckoutBtn" aria-label="Close checkout">&times;</button>
+      <h3>Complete Your Food Order</h3>
+      <p class="modal-sub">Live GPS delivery tracking begins immediately after placing your order.</p>
+
+      <form id="checkoutForm" class="checkout-form">
+        <label>
+          Full Name
+          <input type="text" id="custName" required placeholder="e.g., Arjun Reddy" />
+        </label>
+        <label>
+          Mobile Number
+          <input type="tel" id="custPhone" required pattern="[0-9]{10}" placeholder="10-digit mobile number" />
+        </label>
+        <label>
+          Delivery Address
+          <textarea id="custAddress" rows="2" required placeholder="House/Flat No, Street, Landmark"></textarea>
+        </label>
+        <label>
+          Payment Method
+          <select id="custPayment">
+            <option value="UPI (GPay / PhonePe / Paytm)">UPI (GPay / PhonePe / Paytm)</option>
+            <option value="Credit / Debit Card">Credit / Debit Card</option>
+            <option value="Cash on Delivery">Cash on Delivery</option>
+          </select>
+        </label>
+
+        <div class="checkout-total-box">
+          <span>Amount Payable</span>
+          <strong id="checkoutPayableAmount">₹0</strong>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-full">Place Order &amp; Track Live 🛵</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Live GPS Delivery Tracking Modal -->
+  <div class="modal-backdrop" id="trackerModal" hidden>
+    <div class="modal-box tracker-modal-box">
+      <button type="button" class="close-x modal-close" id="closeTrackerBtn" aria-label="Close tracker">&times;</button>
+
+      <div class="tracker-header">
+        <div>
+          <span class="live-badge"><span class="live-pulse"></span> LIVE GPS TRACKER</span>
+          <h3 id="trackerOrderTitle">Order #FE-784512</h3>
+          <p class="tracker-meta" id="trackerOrderMeta">Hyderabadi Chicken Dum Biryani • Nizam's Royal Kitchen</p>
+        </div>
+        <div class="eta-card">
+          <strong id="trackerEta">18 mins</strong>
+          <span id="trackerDistance">3.1 km away</span>
+        </div>
+      </div>
+
+      <!-- Animated Route Map -->
+      <div class="map-frame">
+        <svg viewBox="0 0 600 230" class="route-svg" aria-label="Live delivery route map">
+          <rect width="600" height="230" rx="14" fill="#0f172a" />
+          <!-- Road Grid -->
+          <g stroke="#1e293b" stroke-width="2">
+            <line x1="0" y1="50" x2="600" y2="50" />
+            <line x1="0" y1="120" x2="600" y2="120" />
+            <line x1="0" y1="185" x2="600" y2="185" />
+            <line x1="110" y1="0" x2="110" y2="230" />
+            <line x1="255" y1="0" x2="255" y2="230" />
+            <line x1="400" y1="0" x2="400" y2="230" />
+            <line x1="515" y1="0" x2="515" y2="230" />
+          </g>
+          <!-- Green Zones -->
+          <rect x="125" y="20" width="95" height="42" rx="8" fill="#14532d" opacity="0.6" />
+          <rect x="365" y="140" width="115" height="52" rx="8" fill="#14532d" opacity="0.6" />
+
+          <!-- Full Route Dashed Line -->
+          <path
+            id="routeBasePath"
+            d="M 75 165 Q 195 40, 315 115 T 525 75"
+            fill="none"
+            stroke="#475569"
+            stroke-width="6"
+            stroke-dasharray="10 8"
+            stroke-linecap="round"
+          />
+
+          <!-- Active Progress Route Line -->
+          <path
+            id="routeActivePath"
+            d="M 75 165 Q 195 40, 315 115 T 525 75"
+            fill="none"
+            stroke="#f97316"
+            stroke-width="6"
+            stroke-linecap="round"
+          />
+
+          <!-- Restaurant Marker -->
+          <g transform="translate(75, 165)">
+            <circle r="15" fill="#ea580c" />
+            <text y="5" text-anchor="middle" font-size="14">🍽️</text>
+            <text y="34" text-anchor="middle" fill="#cbd5e1" font-size="11" font-weight="700">Kitchen</text>
+          </g>
+
+          <!-- Customer Marker -->
+          <g transform="translate(525, 75)">
+            <circle r="15" fill="#16a34a" />
+            <text y="5" text-anchor="middle" font-size="14">🏠</text>
+            <text y="34" text-anchor="middle" fill="#cbd5e1" font-size="11" font-weight="700">Your Door</text>
+          </g>
+
+          <!-- Moving Delivery Scooter -->
+          <g id="riderMarker" transform="translate(75, 165)">
+            <circle r="22" fill="#f97316" opacity="0.26" />
+            <circle r="14" fill="#ffffff" stroke="#ea580c" stroke-width="3" />
+            <text y="5" text-anchor="middle" font-size="14">🛵</text>
+          </g>
+        </svg>
+
+        <div class="map-footer-bar">
+          <div>
+            <div id="trackerDestinationLabel">📍 Destination: Vijayawada, Andhra Pradesh</div>
+            <small id="trackerGpsCoords">GPS: Ready to sync live coordinates</small>
+          </div>
+          <button type="button" class="btn-sync-gps" onclick="detectUserLocation(true)">Sync My GPS</button>
+        </div>
+      </div>
+
+      <!-- 4-Step Delivery Progress -->
+      <div class="tracker-steps" id="statusSteps">
+        <div class="t-step active" data-step="0">
+          <span class="t-dot">1</span>
+          <small>Confirmed</small>
+        </div>
+        <div class="t-step" data-step="1">
+          <span class="t-dot">2</span>
+          <small>Preparing</small>
+        </div>
+        <div class="t-step" data-step="2">
+          <span class="t-dot">3</span>
+          <small>On the Way</small>
+        </div>
+        <div class="t-step" data-step="3">
+          <span class="t-dot">4</span>
+          <small>Delivered</small>
+        </div>
+      </div>
+
+      <p class="tracker-status-msg" id="liveStatusText">
+        Chef is preparing your fresh order in the kitchen.
+      </p>
+
+      <!-- Delivery Partner Bar -->
+      <div class="rider-box">
+        <div class="rider-left">
+          <div class="rider-avatar">RK</div>
+          <div>
+            <strong>Ravi Kumar • Delivery Partner</strong>
+            <p>★ 4.9 Rated • Bike: AP 16 XY 4821</p>
+          </div>
+        </div>
+        <div class="rider-btns">
+          <button type="button" class="btn btn-outline btn-sm" onclick="callRider()">📞 Call</button>
+          <button type="button" class="btn btn-primary btn-sm" id="simulateNextBtn" onclick="advanceTrackingStep()">
+            Next Stage ▶
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <!-- Interactive Application Logic -->
+  <script>
+    // 1. Offline-Safe Image Fallback (Prevents broken images even without internet)
+    function fallbackImg(imgEl) {
+      imgEl.onerror = null;
+      const label = (imgEl.dataset.fallback || "Fresh Food").replace(/[<>&"']/g, "");
+      const svg = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="600" height="400" viewBox="0 0 600 400">
+          <defs>
+            <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#c2410c"/>
+              <stop offset="100%" stop-color="#f59e0b"/>
+            </linearGradient>
+          </defs>
+          <rect width="600" height="400" fill="url(#bg)"/>
+          <text x="300" y="180" text-anchor="middle" font-size="64">🍽️</text>
+          <text x="300" y="245" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#ffffff">${label}</text>
+        </svg>
+      `;
+      imgEl.src = "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg);
+    }
+
+    // 2. Complete Verified Food & Restaurant Dataset
+    const categories = [
+      { name: "All", icon: "🍽️" },
+      { name: "Biryani", icon: "🍛" },
+      { name: "South Indian", icon: "🥞" },
+      { name: "North Indian", icon: "🍲" },
+      { name: "Street Food", icon: "🥟" },
+      { name: "Pizza & Burgers", icon: "🍕" },
+      { name: "Asian & Momos", icon: "🍜" },
+      { name: "Desserts", icon: "🍩" }
+    ];
+
+    const restaurants = [
+      {
+        id: "r1",
+        name: "Nizam's Royal Kitchen",
+        cuisine: "Hyderabadi Dum Biryani, Kebabs",
+        rating: 4.9,
+        time: "22–28 mins",
+        offer: "₹100 OFF • Code FEAST100",
+        image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800&q=80"
+      },
+      {
+        id: "r2",
+        name: "Udupi Heritage Tiffins",
+        cuisine: "South Indian, Ghee Dosa, Healthy Bowls",
+        rating: 4.8,
+        time: "18–22 mins",
+        offer: "20% OFF • Code SAVE20",
+        image: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=800&q=80"
+      },
+      {
+        id: "r3",
+        name: "Old Delhi Tandoor House",
+        cuisine: "North Indian, Butter Chicken, Paneer Thalis",
+        rating: 4.9,
+        time: "25–32 mins",
+        offer: "Free Delivery above ₹399",
+        image: "https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&w=800&q=80"
+      },
+      {
+        id: "r4",
+        name: "Bombay Chowpatty Express",
+        cuisine: "Mumbai Street Food, Pav Bhaji, Samosas",
+        rating: 4.7,
+        time: "15–20 mins",
+        offer: "Flat ₹100 OFF above ₹299",
+        image: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=800&q=80"
+      },
+      {
+        id: "r5",
+        name: "Crust & Flame Pizzeria",
+        cuisine: "Wood-Fired Pizza, Smash Burgers",
+        rating: 4.7,
+        time: "20–25 mins",
+        offer: "20% OFF with SAVE20",
+        image: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=800&q=80"
+      },
+      {
+        id: "r6",
+        name: "Himalayan Wok & Momos",
+        cuisine: "Darjeeling Momos, Ramen, Artisanal Donuts",
+        rating: 4.8,
+        time: "20–26 mins",
+        offer: "Free Delivery • Code FREEDEL",
+        image: "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=800&q=80"
+      }
+    ];
+
+    const dishes = [
+      {
+        id: 1,
+        name: "Hyderabadi Chicken Dum Biryani",
+        restaurantId: "r1",
+        restaurantName: "Nizam's Royal Kitchen",
+        category: "Biryani",
+        famousIn: "Hyderabad, Telangana",
+        story: "Fragrant saffron basmati rice slow-cooked in a sealed handi with marinated chicken, mint, and crispy birista onions.",
+        famousHighlight: true,
+        veg: false,
+        prepTime: "25 mins",
+        price: 299,
+        mrp: 389,
+        rating: 4.9,
+        image: "https://images.unsplash.com/photo-1589302168068-964664d93dc0?auto=format&fit=crop&w=800&q=80"
+      },
+      {
+        id: 2,
+        name: "Crispy Ghee Masala Dosa",
+        restaurantId: "r2",
+        restaurantName: "Udupi Heritage Tiffins",
+        category: "South Indian",
+        famousIn: "Udupi & Bengaluru, Karnataka",
+        story: "Paper-thin golden crepe roasted in pure ghee, stuffed with tempered potato masala, served with sambar and coconut chutney.",
+        famousHighlight: true,
+        veg: true,
+        prepTime: "15 mins",
+        price: 149,
+        mrp: 195,
+        rating: 4.8,
+        image: "https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=800&q=80"
+      },
+      {
+        id: 3,
+        name: "Old Delhi Butter Chicken",
+        restaurantId: "r3",
+        restaurantName: "Old Delhi Tandoor House",
+        category: "North Indian",
+        famousIn: "Old Delhi (Daryaganj)",
+        story: "Smoky tandoori chicken simmered in velvety tomato-butter gravy enriched with cream and roasted kasuri methi.",
+        famousHighlight: true,
+        veg: false,
+        prepTime: "24 mins",
+        price: 349,
+        mrp: 449,
+        rating: 4.9,
+        image: "https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?auto=format&fit=crop&w=800&q=80"
+      },
+      {
+        id: 4,
+        name: "Mumbai Butter Pav Bhaji",
+        restaurantId: "r4",
+        restaurantName: "Bombay Chowpatty Express",
+        category: "Street Food",
+        famousIn: "Mumbai, Maharashtra",
+        story: "Juhu Beach's iconic spiced vegetable mash finished with melted butter, lime, and soft butter-toasted pav.",
+        famousHighlight: true,
+        veg: true,
+        prepTime: "16 mins",
+        price: 169,
+        mrp: 220,
+        rating: 4.8,
+        image: "https://images.unsplash.com/photo-1606491956689-2ea866880c84?auto=format&fit=crop&w=800&q=80"
+      },
+      {
+        id: 5,
+        name: "Amritsari Royal Paneer Thali",
+        restaurantId: "r3",
+        restaurantName: "Old Delhi Tandoor House",
+        category: "North Indian",
+        famousIn: "Amritsar, Punjab",
+        story: "Hearty royal platter featuring smoky Paneer Tikka Masala, Dal Makhani, garlic naan, jeera pulao, and raita.",
+        famousHighlight: true,
+        veg: true,
+        prepTime: "22 mins",
+        price: 279,
+        mrp: 360,
+        rating: 4.8,
+        image: "https://images.unsplash.com/photo-1567188040759-fb8a883dc6d8?auto=format&fit=crop&w=800&q=80"
+      },
+      {
+        id: 6,
+        name: "Darjeeling Steamed Momos",
+        restaurantId: "r6",
+        restaurantName: "Himalayan Wok & Momos",
+        category: "Asian & Momos",
+        famousIn: "Darjeeling, West Bengal",
+        story: "Delicate hand-pleated dumplings steamed piping hot and served with signature spicy red garlic-sesame chutney.",
+        famousHighlight: true,
+        veg: true,
+        prepTime: "15 mins",
+        price: 159,
+        mrp: 210,
+        rating: 4.8,
+        image: "https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?auto=format&fit=crop&w=800&q=80"
+      },
+      {
+        id: 7,
+        name: "Varanasi Crispy Samosa Platter",
+        restaurantId: "r4",
+        restaurantName: "Bombay Chowpatty Express",
+        category: "Street Food",
+        famousIn: "Varanasi, Uttar Pradesh",
+        story: "Flaky golden triangles filled with roasted cumin spiced potatoes and green peas, served with mint and tamarind dips.",
+        famousHighlight: false,
+        veg: true,
+        prepTime: "12 mins",
+        price: 119,
+        mrp: 155,
+        rating: 4.6,
+        image: "https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=800&q=80"
+      },
+      {
+        id: 8,
+        name: "Neapolitan Margherita Pizza",
+        restaurantId: "r5",
+        restaurantName: "Crust & Flame Pizzeria",
+        category: "Pizza & Burgers",
+        famousIn: "Naples, Italy (Global Favourite)",
+        story: "Wood-fired hand-stretched sourdough crust layered with tangy San Marzano sauce, fresh mozzarella, and sweet basil.",
+        famousHighlight: false,
+        veg: true,
+        prepTime: "20 mins",
+        price: 329,
+        mrp: 420,
+        rating: 4.7,
+        image: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=800&q=80"
+      },
+      {
+        id: 9,
+        name: "Loaded Peri-Peri Crunch Burger",
+        restaurantId: "r5",
+        restaurantName: "Crust & Flame Pizzeria",
+        category: "Pizza & Burgers",
+        famousIn: "Bengaluru Cafe Special",
+        story: "Crispy grilled patty stacked with cheddar cheese, caramelised onions, crunchy lettuce, and smoky peri-peri sauce.",
+        famousHighlight: false,
+        veg: false,
+        prepTime: "18 mins",
+        price: 229,
+        mrp: 299,
+        rating: 4.7,
+        image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=800&q=80"
+      },
+      {
+        id: 10,
+        name: "Spicy Schezwan Ramen Bowl",
+        restaurantId: "r6",
+        restaurantName: "Himalayan Wok & Momos",
+        category: "Asian & Momos",
+        famousIn: "Kolkata Indo-Chinese Special",
+        story: "Steaming savoury broth loaded with springy noodles, wok-tossed vegetables, aromatic chilli oil, and toasted sesame.",
+        famousHighlight: false,
+        veg: true,
+        prepTime: "18 mins",
+        price: 249,
+        mrp: 315,
+        rating: 4.7,
+        image: "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=800&q=80"
+      },
+      {
+        id: 11,
+        name: "Belgian Chocolate Glazed Donuts",
+        restaurantId: "r6",
+        restaurantName: "Himalayan Wok & Momos",
+        category: "Desserts",
+        famousIn: "Mumbai Artisan Bakery Special",
+        story: "Box of 3 cloud-soft ring donuts hand-dipped in rich Belgian dark chocolate ganache and roasted hazelnut crunch.",
+        famousHighlight: false,
+        veg: true,
+        prepTime: "10 mins",
+        price: 189,
+        mrp: 250,
+        rating: 4.8,
+        image: "https://images.unsplash.com/photo-1551024601-bec78aea704b?auto=format&fit=crop&w=800&q=80"
+      },
+      {
+        id: 12,
+        name: "Avocado & Herb Quinoa Bowl",
+        restaurantId: "r2",
+        restaurantName: "Udupi Heritage Tiffins",
+        category: "South Indian",
+        famousIn: "Bengaluru Healthy Eats",
+        story: "Protein-rich bowl with roasted chickpeas, sliced avocado, garden veggies, and zesty lemon-herb dressing.",
+        famousHighlight: false,
+        veg: true,
+        prepTime: "14 mins",
+        price: 219,
+        mrp: 280,
+        rating: 4.6,
+        image: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=800&q=80"
+      }
+    ];
+
+    const validCoupons = {
+      FEAST100: { code: "FEAST100", type: "flat", value: 100, minOrder: 299, label: "FEAST100 (₹100 OFF)" },
+      SAVE20: { code: "SAVE20", type: "percent", value: 20, minOrder: 0, label: "SAVE20 (20% OFF)" },
+      FREEDEL: { code: "FREEDEL", type: "freedel", value: 0, minOrder: 0, label: "FREEDEL (Free Delivery)" }
+    };
+
+    // 3. Safe Storage Helpers
+    function readStore(key, fallback) {
+      try {
+        const raw = localStorage.getItem(key);
+        return raw ? JSON.parse(raw) : fallback;
+      } catch (err) {
+        return fallback;
+      }
+    }
+
+    function writeStore(key, value) {
+      try {
+        localStorage.setItem(key, JSON.stringify(value));
+      } catch (err) {
+        // Ignore storage restrictions
+      }
+    }
+
+    // 4. App State
+    let cart = readStore("feastexpress_cart", []);
+    let activeCategory = "All";
+    let activeRestaurantId = null;
+    let appliedCoupon = null;
+    let userLocationText = "Vijayawada, Andhra Pradesh";
+    let userCoordsText = "";
+
+    let trackingStep = 1;
+    let trackingInterval = null;
+    let activeOrderInfo = {
+      id: "FE-784512",
+      summary: "Hyderabadi Chicken Dum Biryani • Nizam's Royal Kitchen"
+    };
+
+    const trackingStages = [
+      { progress: 0.08, eta: "26 mins", dist: "4.2 km away", msg: "Order confirmed! Sent directly to the restaurant kitchen." },
+      { progress: 0.36, eta: "18 mins", dist: "3.1 km away", msg: "Chef is freshly cooking and sealing your hot meal." },
+      { progress: 0.74, eta: "6 mins", dist: "0.9 km away", msg: "Ravi Kumar picked up your food and is heading to your doorstep!" },
+      { progress: 1.0, eta: "Delivered!", dist: "0.0 km • Arrived", msg: "Your meal has arrived! Enjoy your FeastExpress order." }
+    ];
+
+    // 5. DOM References
+    const citySelect = document.getElementById("citySelect");
+    const detectGpsBtn = document.getElementById("detectGpsBtn");
+    const gpsStatusBadge = document.getElementById("gpsStatusBadge");
+    const activeCityHeading = document.getElementById("activeCityHeading");
+    const cartDeliveryCity = document.getElementById("cartDeliveryCity");
+    const trackerDestinationLabel = document.getElementById("trackerDestinationLabel");
+    const trackerGpsCoords = document.getElementById("trackerGpsCoords");
+
+    const searchInput = document.getElementById("searchInput");
+    const clearSearchBtn = document.getElementById("clearSearchBtn");
+    const categoriesStrip = document.getElementById("categoriesStrip");
+    const famousGrid = document.getElementById("famousGrid");
+    const restaurantsGrid = document.getElementById("restaurantsGrid");
+    const clearRestBtn = document.getElementById("clearRestBtn");
+    const dishesGrid = document.getElementById("dishesGrid");
+    const emptyState = document.getElementById("emptyState");
+    const menuSubtitle = document.getElementById("menuSubtitle");
+    const vegOnlyToggle = document.getElementById("vegOnlyToggle");
+    const sortSelect = document.getElementById("sortSelect");
+    const activeFilterBar = document.getElementById("activeFilterBar");
+    const activeFilterText = document.getElementById("activeFilterText");
+
+    const cartOverlay = document.getElementById("cartOverlay");
+    const cartDrawer = document.getElementById("cartDrawer");
+    const cartCount = document.getElementById("cartCount");
+    const cartItems = document.getElementById("cartItems");
+    const clearCartBtn = document.getElementById("clearCartBtn");
+    const freeDeliveryBar = document.getElementById("freeDeliveryBar");
+    const couponInput = document.getElementById("couponInput");
+    const removeCouponBtn = document.getElementById("removeCouponBtn");
+    const couponMsg = document.getElementById("couponMsg");
+    const billSubtotal = document.getElementById("billSubtotal");
+    const billDiscountRow = document.getElementById("billDiscountRow");
+    const billDiscountLabel = document.getElementById("billDiscountLabel");
+    const billDiscount = document.getElementById("billDiscount");
+    const billDelivery = document.getElementById("billDelivery");
+    const billGst = document.getElementById("billGst");
+    const billTotal = document.getElementById("billTotal");
+    const proceedCheckoutBtn = document.getElementById("proceedCheckoutBtn");
+
+    const dishModal = document.getElementById("dishModal");
+    const dishModalBody = document.getElementById("dishModalBody");
+    const checkoutModal = document.getElementById("checkoutModal");
+    const checkoutForm = document.getElementById("checkoutForm");
+    const checkoutPayableAmount = document.getElementById("checkoutPayableAmount");
+    const trackerModal = document.getElementById("trackerModal");
+    const toastEl = document.getElementById("toast");
+    let toastTimer = null;
+
+    // 6. Toast Notification
+    function showToast(msg) {
+      toastEl.textContent = msg;
+      toastEl.classList.add("show");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toastEl.classList.remove("show"), 2600);
+    }
+
+    // 7. Location & Real Browser GPS Access
+    function updateLocationUI(cityLabel) {
+      userLocationText = cityLabel;
+      activeCityHeading.textContent = cityLabel;
+      cartDeliveryCity.textContent = cityLabel;
+      trackerDestinationLabel.textContent = "📍 Destination: " + cityLabel;
+      trackerGpsCoords.textContent = userCoordsText
+        ? "GPS Locked: " + userCoordsText
+        : "GPS: Click 'Sync My GPS' to lock exact coordinates";
+    }
+
+    citySelect.addEventListener("change", () => {
+      userCoordsText = "";
+      detectGpsBtn.textContent = "Use GPS";
+      gpsStatusBadge.textContent = "📍 " + citySelect.value.split(",")[0];
+      updateLocationUI(citySelect.value);
+      showToast("Delivery city switched to " + citySelect.value);
+    });
+
+    function detectUserLocation(fromTracker) {
+      if (!navigator.geolocation) {
+        showToast("Browser GPS is unavailable. Select your city from the menu.");
+        return;
+      }
+
+      detectGpsBtn.textContent = "Locating...";
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const lat = pos.coords.latitude.toFixed(4);
+          const lng = pos.coords.longitude.toFixed(4);
+          userCoordsText = `${lat}° N, ${lng}° E`;
+          detectGpsBtn.textContent = "GPS On ✓";
+          gpsStatusBadge.textContent = `🛰️ GPS: ${lat}, ${lng}`;
+          updateLocationUI(citySelect.value);
+
+          const addrBox = document.getElementById("custAddress");
+          if (addrBox && !addrBox.value.trim()) {
+            addrBox.value = `GPS Pin (${lat}, ${lng}), ${citySelect.value}`;
+          }
+          showToast(`Live GPS locked at ${lat}, ${lng}`);
+        },
+        () => {
+          detectGpsBtn.textContent = "Use GPS";
+          userCoordsText = "Simulated Live Route (" + citySelect.value.split(",")[0] + ")";
+          updateLocationUI(citySelect.value);
+          showToast(
+            fromTracker
+              ? "GPS permission denied — tracking with selected city route."
+              : "Location permission blocked — using " + citySelect.value + "."
+          );
+        },
+        { enableHighAccuracy: true, timeout: 6000 }
+      );
+    }
+
+    detectGpsBtn.addEventListener("click", () => detectUserLocation(false));
+
+    // 8. Render Functions
+    function getQty(dishId) {
+      const item = cart.find((x) => x.id === dishId);
+      return item ? item.qty : 0;
+    }
+
+    function renderCategories() {
+      categoriesStrip.innerHTML = categories
+        .map((cat) => {
+          const count = cat.name === "All"
+            ? dishes.length
+            : dishes.filter((d) => d.category === cat.name).length;
+          return `
+            <button
+              type="button"
+              class="cat-chip ${activeCategory === cat.name ? "active" : ""}"
+              onclick="selectCategory('${cat.name}')"
+            >
+              <span>${cat.icon}</span>
+              <span>${cat.name}</span>
+              <small class="cat-count">${count}</small>
+            </button>
+          `;
+        })
+        .join("");
+    }
+
+    function renderFamousFoods() {
+      const featured = dishes.filter((d) => d.famousHighlight);
+      famousGrid.innerHTML = featured
+        .map((dish) => `
+          <article class="famous-card">
+            <div class="famous-img-box" onclick="openDishModal(${dish.id})">
+              <img
+                src="${dish.image}"
+                alt="${dish.name}"
+                data-fallback="${dish.name}"
+                loading="lazy"
+                onerror="fallbackImg(this)"
+              />
+              <span class="origin-tag">📍 Famous in ${dish.famousIn}</span>
+            </div>
+            <div class="famous-body">
+              <div class="meta-row">
+                <span class="diet-pill ${dish.veg ? "veg" : "nonveg"}">${dish.veg ? "VEG" : "NON-VEG"}</span>
+                <span class="rating-tag">★ ${dish.rating}</span>
+              </div>
+              <h3 class="clickable-title" onclick="openDishModal(${dish.id})">${dish.name}</h3>
+              <p class="famous-desc">${dish.story}</p>
+              <div class="card-foot">
+                <div>
+                  <span class="price-now">₹${dish.price}</span>
+                  <span class="price-old">₹${dish.mrp}</span>
+                </div>
+                <button type="button" class="btn btn-primary btn-sm" onclick="addToCart(${dish.id})">
+                  Order Now +
+                </button>
+              </div>
+            </div>
+          </article>
+        `)
+        .join("");
+    }
+
+    function renderRestaurants() {
+      restaurantsGrid.innerHTML = restaurants
+        .map((res) => `
+          <article
+            class="rest-card ${activeRestaurantId === res.id ? "selected" : ""}"
+            onclick="selectRestaurant('${res.id}')"
+          >
+            <div class="rest-img-box">
+              <img
+                src="${res.image}"
+                alt="${res.name}"
+                data-fallback="${res.name}"
+                loading="lazy"
+                onerror="fallbackImg(this)"
+              />
+              <span class="rest-offer-badge">${res.offer}</span>
+            </div>
+            <div class="rest-body">
+              <div class="rest-top">
+                <h3>${res.name}</h3>
+                <span class="rating-tag">★ ${res.rating}</span>
+              </div>
+              <p class="rest-cuisine">${res.cuisine}</p>
+              <div class="rest-foot">
+                <span>⏱️ ${res.time}</span>
+                <span class="rest-link">${activeRestaurantId === res.id ? "Selected ✓" : "View Menu →"}</span>
+              </div>
+            </div>
+          </article>
+        `)
+        .join("");
+    }
+
+    function renderDishes() {
+      const q = searchInput.value.trim().toLowerCase();
+      const vegOnly = vegOnlyToggle.checked;
+      const sortVal = sortSelect.value;
+
+      let filtered = dishes.filter((d) => {
+        const okCat = activeCategory === "All" || d.category === activeCategory;
+        const okRest = !activeRestaurantId || d.restaurantId === activeRestaurantId;
+        const okVeg = !vegOnly || d.veg;
+        const okSearch =
+          !q ||
+          d.name.toLowerCase().includes(q) ||
+          d.category.toLowerCase().includes(q) ||
+          d.famousIn.toLowerCase().includes(q) ||
+          d.restaurantName.toLowerCase().includes(q);
+        return okCat && okRest && okVeg && okSearch;
+      });
+
+      if (sortVal === "price-low") filtered.sort((a, b) => a.price - b.price);
+      if (sortVal === "price-high") filtered.sort((a, b) => b.price - a.price);
+      if (sortVal === "rating") filtered.sort((a, b) => b.rating - a.rating);
+
+      // Update Filter Status Bar
+      const notes = [];
+      if (activeCategory !== "All") notes.push("Category: " + activeCategory);
+      if (activeRestaurantId) {
+        const rObj = restaurants.find((r) => r.id === activeRestaurantId);
+        if (rObj) notes.push("Restaurant: " + rObj.name);
+      }
+      if (vegOnly) notes.push("Pure Veg");
+      if (q) notes.push('Search: "' + searchInput.value.trim() + '"');
+
+      if (notes.length > 0) {
+        activeFilterBar.hidden = false;
+        activeFilterText.textContent = "Showing Filters → " + notes.join(" • ");
+        menuSubtitle.textContent = `Found ${filtered.length} matching dish${filtered.length === 1 ? "" : "es"}.`;
+      } else {
+        activeFilterBar.hidden = true;
+        menuSubtitle.textContent = `Showing all ${filtered.length} dishes ready for express delivery.`;
+      }
+
+      if (filtered.length === 0) {
+        dishesGrid.innerHTML = "";
+        emptyState.hidden = false;
+        return;
+      }
+
+      emptyState.hidden = true;
+      dishesGrid.innerHTML = filtered
+        .map((dish) => {
+          const qty = getQty(dish.id);
+          const offPct = Math.round(((dish.mrp - dish.price) / dish.mrp) * 100);
+          return `
+            <article class="dish-card">
+              <div class="dish-img-box" onclick="openDishModal(${dish.id})">
+                <img
+                  src="${dish.image}"
+                  alt="${dish.name}"
+                  data-fallback="${dish.name}"
+                  loading="lazy"
+                  onerror="fallbackImg(this)"
+                />
+                <span class="dish-city-chip">📍 ${dish.famousIn}</span>
+                <span class="dish-off-chip">${offPct}% OFF</span>
+              </div>
+
+              <div class="dish-body">
+                <div class="meta-row">
+                  <span class="diet-pill ${dish.veg ? "veg" : "nonveg"}">${dish.veg ? "VEG" : "NON-VEG"}</span>
+                  <span class="rating-tag">★ ${dish.rating}</span>
+                </div>
+                <h3 class="clickable-title" onclick="openDishModal(${dish.id})">${dish.name}</h3>
+                <p class="dish-rest">by ${dish.restaurantName}</p>
+                <p class="dish-story">${dish.story}</p>
+
+                <div class="card-foot">
+                  <div>
+                    <span class="price-now">₹${dish.price}</span>
+                    <span class="price-old">₹${dish.mrp}</span>
+                  </div>
+                  ${
+                    qty === 0
+                      ? `<button type="button" class="btn btn-primary btn-sm" onclick="addToCart(${dish.id})">Order +</button>`
+                      : `<div class="qty-pill">
+                           <button type="button" onclick="updateQty(${dish.id}, -1)" aria-label="Decrease quantity">−</button>
+                           <span>${qty}</span>
+                           <button type="button" onclick="updateQty(${dish.id}, 1)" aria-label="Increase quantity">+</button>
+                         </div>`
+                  }
+                </div>
+              </div>
+            </article>
+          `;
+        })
+        .join("");
+    }
+
+    // 9. Filter & Search Event Handlers
+    function selectCategory(catName) {
+      activeCategory = catName;
+      renderCategories();
+      renderDishes();
+      document.getElementById("dishes").scrollIntoView({ behavior: "smooth" });
+    }
+
+    function selectRestaurant(restId) {
+      activeRestaurantId = activeRestaurantId === restId ? null : restId;
+      clearRestBtn.hidden = !activeRestaurantId;
+      renderRestaurants();
+      renderDishes();
+      if (activeRestaurantId) {
+        document.getElementById("dishes").scrollIntoView({ behavior: "smooth" });
+      }
+    }
+
+    function clearRestaurantFilter() {
+      activeRestaurantId = null;
+      clearRestBtn.hidden = true;
+      renderRestaurants();
+      renderDishes();
+    }
+
+    function quickSearch(term) {
+      searchInput.value = term;
+      clearSearchBtn.hidden = false;
+      activeCategory = "All";
+      activeRestaurantId = null;
+      clearRestBtn.hidden = true;
+      renderCategories();
+      renderRestaurants();
+      renderDishes();
+      document.getElementById("dishes").scrollIntoView({ behavior: "smooth" });
+    }
+
+    function resetAllFilters() {
+      activeCategory = "All";
+      activeRestaurantId = null;
+      vegOnlyToggle.checked = false;
+      sortSelect.value = "default";
+      searchInput.value = "";
+      clearSearchBtn.hidden = true;
+      clearRestBtn.hidden = true;
+      renderCategories();
+      renderRestaurants();
+      renderDishes();
+    }
+
+    document.getElementById("heroSearchForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+      renderDishes();
+      document.getElementById("dishes").scrollIntoView({ behavior: "smooth" });
+    });
+
+    searchInput.addEventListener("input", () => {
+      clearSearchBtn.hidden = searchInput.value.trim() === "";
+      renderDishes();
+    });
+
+    clearSearchBtn.addEventListener("click", () => {
+      searchInput.value = "";
+      clearSearchBtn.hidden = true;
+      renderDishes();
+    });
+
+    vegOnlyToggle.addEventListener("change", renderDishes);
+    sortSelect.addEventListener("change", renderDishes);
+
+    // 10. Dish Details Quick-View Modal
+    function openDishModal(dishId) {
+      const d = dishes.find((x) => x.id === dishId);
+      if (!d) return;
+      const offPct = Math.round(((d.mrp - d.price) / d.mrp) * 100);
+
+      dishModalBody.innerHTML = `
+        <div class="dish-modal-grid">
+          <img
+            src="${d.image}"
+            alt="${d.name}"
+            data-fallback="${d.name}"
+            class="dish-modal-img"
+            onerror="fallbackImg(this)"
+          />
+          <div>
+            <span class="origin-inline">📍 Famous in ${d.famousIn}</span>
+            <h3 style="margin: 8px 0 4px;">${d.name}</h3>
+            <p class="modal-sub" style="margin: 0 0 10px;">
+              ${d.restaurantName} • ★ ${d.rating} • ⏱️ ${d.prepTime}
+            </p>
+            <p style="font-size: 0.92rem; color: var(--muted); margin-bottom: 14px;">${d.story}</p>
+            <div style="margin-bottom: 16px;">
+              <span class="price-now" style="font-size: 1.3rem;">₹${d.price}</span>
+              <span class="price-old">₹${d.mrp}</span>
+              <span class="diet-pill veg" style="margin-left: 8px;">${offPct}% OFF</span>
+            </div>
+            <button type="button" class="btn btn-primary btn-full" onclick="addToCart(${d.id}); closeDishModal();">
+              Add to Cart • ₹${d.price}
+            </button>
+          </div>
+        </div>
+      `;
+      dishModal.hidden = false;
+    }
+
+    function closeDishModal() {
+      dishModal.hidden = true;
+    }
+
+    document.getElementById("closeDishModalBtn").addEventListener("click", closeDishModal);
+    dishModal.addEventListener("click", (e) => {
+      if (e.target === dishModal) closeDishModal();
+    });
+
+    // 11. Cart & Billing System
+    function addToCart(dishId) {
+      const dish = dishes.find((d) => d.id === dishId);
+      if (!dish) return;
+      const existing = cart.find((i) => i.id === dishId);
+      if (existing) {
+        existing.qty += 1;
+      } else {
+        cart.push({ id: dishId, qty: 1 });
+      }
+      writeStore("feastexpress_cart", cart);
+      updateCartUI();
+      renderDishes();
+      showToast(`Added "${dish.name}" to Cart`);
+    }
+
+    function updateQty(dishId, delta) {
+      const item = cart.find((i) => i.id === dishId);
+      if (!item) return;
+      item.qty += delta;
+      if (item.qty <= 0) {
+        cart = cart.filter((i) => i.id !== dishId);
+      }
+      writeStore("feastexpress_cart", cart);
+      updateCartUI();
+      renderDishes();
+    }
+
+    clearCartBtn.addEventListener("click", () => {
+      cart = [];
+      appliedCoupon = null;
+      couponInput.value = "";
+      couponMsg.textContent = "";
+      removeCouponBtn.hidden = true;
+      writeStore("feastexpress_cart", cart);
+      updateCartUI();
+      renderDishes();
+      showToast("Cart cleared");
+    });
+
+    function computeBill() {
+      let subtotal = 0;
+      cart.forEach((item) => {
+        const d = dishes.find((x) => x.id === item.id);
+        if (d) subtotal += d.price * item.qty;
+      });
+
+      let discount = 0;
+      let freeDeliveryByCoupon = false;
+
+      if (appliedCoupon && subtotal > 0) {
+        if (appliedCoupon.type === "flat" && subtotal >= appliedCoupon.minOrder) {
+          discount = appliedCoupon.value;
+        } else if (appliedCoupon.type === "percent") {
+          discount = Math.round((subtotal * appliedCoupon.value) / 100);
+        } else if (appliedCoupon.type === "freedel") {
+          freeDeliveryByCoupon = true;
+        }
+      }
+
+      const afterDiscount = Math.max(0, subtotal - discount);
+      const delivery = subtotal === 0 ? 0 : (afterDiscount >= 399 || freeDeliveryByCoupon ? 0 : 39);
+      const gst = subtotal === 0 ? 0 : Math.round(afterDiscount * 0.05);
+      const total = afterDiscount + delivery + gst;
+
+      return { subtotal, discount, delivery, gst, total, freeDeliveryByCoupon };
+    }
+
+    function updateCartUI() {
+      const totalItems = cart.reduce((sum, i) => sum + i.qty, 0);
+      cartCount.textContent = totalItems;
+      clearCartBtn.hidden = cart.length === 0;
+
+      if (cart.length === 0) {
+        cartItems.innerHTML = `
+          <div class="cart-empty">
+            <p>Your food cart is empty 🍽️</p>
+            <span>Pick dishes from Famous Foods or Popular Dishes to start your order.</span>
+          </div>
+        `;
+        proceedCheckoutBtn.disabled = true;
+      } else {
+        proceedCheckoutBtn.disabled = false;
+        cartItems.innerHTML = cart
+          .map((item) => {
+            const d = dishes.find((x) => x.id === item.id);
+            if (!d) return "";
+            return `
+              <div class="cart-item">
+                <img
+                  src="${d.image}"
+                  alt="${d.name}"
+                  data-fallback="${d.name}"
+                  class="cart-thumb"
+                  onerror="fallbackImg(this)"
+                />
+                <div class="cart-item-meta">
+                  <h4>${d.name}</h4>
+                  <p>₹${d.price} • ${d.restaurantName}</p>
+                  <div class="qty-pill compact">
+                    <button type="button" onclick="updateQty(${d.id}, -1)">−</button>
+                    <span>${item.qty}</span>
+                    <button type="button" onclick="updateQty(${d.id}, 1)">+</button>
+                  </div>
+                </div>
+                <strong>₹${d.price * item.qty}</strong>
+              </div>
+            `;
+          })
+          .join("");
+      }
+
+      const bill = computeBill();
+
+      // Free delivery helper strip
+      if (bill.subtotal === 0) {
+        freeDeliveryBar.textContent = "Add items worth ₹399 for FREE Express Delivery!";
+      } else if (bill.delivery === 0) {
+        freeDeliveryBar.textContent = "🎉 Yay! You unlocked FREE Express Delivery on this order.";
+      } else {
+        const needed = Math.max(0, 399 - (bill.subtotal - bill.discount));
+        freeDeliveryBar.textContent = `Add ₹${needed} more for FREE Delivery (or use code FREEDEL).`;
+      }
+
+      billSubtotal.textContent = "₹" + bill.subtotal;
+
+      if (appliedCoupon && (bill.discount > 0 || bill.freeDeliveryByCoupon)) {
+        billDiscountRow.hidden = false;
+        billDiscountLabel.textContent = appliedCoupon.label;
+        billDiscount.textContent = bill.freeDeliveryByCoupon ? "FREE DELIVERY" : "-₹" + bill.discount;
+      } else {
+        billDiscountRow.hidden = true;
+      }
+
+      billDelivery.textContent = bill.delivery === 0 ? "FREE" : "₹" + bill.delivery;
+      billGst.textContent = "₹" + bill.gst;
+      billTotal.textContent = "₹" + bill.total;
+    }
+
+    function openCart() {
+      cartDrawer.classList.add("open");
+      cartOverlay.hidden = false;
+    }
+
+    function closeCart() {
+      cartDrawer.classList.remove("open");
+      cartOverlay.hidden = true;
+    }
+
+    document.getElementById("openCartBtn").addEventListener("click", openCart);
+    document.getElementById("closeCartBtn").addEventListener("click", closeCart);
+    cartOverlay.addEventListener("click", closeCart);
+
+    // 12. Coupon Code Controls
+    function applyCouponCode(raw) {
+      const code = raw.trim().toUpperCase();
+      if (!code) {
+        couponMsg.textContent = "Enter FEAST100, SAVE20, or FREEDEL.";
+        couponMsg.className = "coupon-msg error";
+        return;
+      }
+
+      const found = validCoupons[code];
+      if (!found) {
+        appliedCoupon = null;
+        removeCouponBtn.hidden = true;
+        couponMsg.textContent = "Invalid coupon. Try FEAST100, SAVE20, or FREEDEL.";
+        couponMsg.className = "coupon-msg error";
+        updateCartUI();
+        return;
+      }
+
+      appliedCoupon = found;
+      couponInput.value = found.code;
+      removeCouponBtn.hidden = false;
+
+      const bill = computeBill();
+      if (found.minOrder > 0 && bill.subtotal < found.minOrder && cart.length > 0) {
+        couponMsg.textContent = `Add ₹${found.minOrder - bill.subtotal} more to activate ${found.code}.`;
+        couponMsg.className = "coupon-msg error";
+      } else {
+        couponMsg.textContent = `Coupon ${found.label} applied!`;
+        couponMsg.className = "coupon-msg success";
+        showToast(`Applied ${found.code}!`);
+      }
+      updateCartUI();
+    }
+
+    function applyCouponQuick(code) {
+      applyCouponCode(code);
+      openCart();
+    }
+
+    document.getElementById("applyCouponBtn").addEventListener("click", () => {
+      applyCouponCode(couponInput.value);
+    });
+
+    removeCouponBtn.addEventListener("click", () => {
+      appliedCoupon = null;
+      couponInput.value = "";
+      couponMsg.textContent = "Coupon removed.";
+      couponMsg.className = "coupon-msg";
+      removeCouponBtn.hidden = true;
+      updateCartUI();
+    });
+
+    // 13. Checkout Flow -> Triggers Live Delivery Tracker
+    proceedCheckoutBtn.addEventListener("click", () => {
+      const bill = computeBill();
+      checkoutPayableAmount.textContent = "₹" + bill.total;
+      const addrField = document.getElementById("custAddress");
+      if (!addrField.value.trim()) {
+        addrField.value = userLocationText + (userCoordsText ? " (" + userCoordsText + ")" : "");
+      }
+      closeCart();
+      checkoutModal.hidden = false;
+    });
+
+    function closeCheckoutModal() {
+      checkoutModal.hidden = true;
+    }
+
+    document.getElementById("closeCheckoutBtn").addEventListener("click", closeCheckoutModal);
+    checkoutModal.addEventListener("click", (e) => {
+      if (e.target === checkoutModal) closeCheckoutModal();
+    });
+
+    checkoutForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const customerName = document.getElementById("custName").value.trim();
+      const address = document.getElementById("custAddress").value.trim();
+      const firstDish = cart.length > 0 ? dishes.find((d) => d.id === cart[0].id) : dishes[0];
+      const extraItems = Math.max(0, cart.reduce((s, i) => s + i.qty, 0) - 1);
+
+      activeOrderInfo = {
+        id: "FE-" + Math.floor(100000 + Math.random() * 900000),
+        summary: `${firstDish.name}${extraItems > 0 ? " + " + extraItems + " more" : ""} • ${firstDish.restaurantName}`
+      };
+
+      updateLocationUI(address);
+      cart = [];
+      appliedCoupon = null;
+      couponInput.value = "";
+      couponMsg.textContent = "";
+      removeCouponBtn.hidden = true;
+      writeStore("feastexpress_cart", cart);
+      updateCartUI();
+      renderDishes();
+
+      checkoutForm.reset();
+      closeCheckoutModal();
+      showToast(`Order placed, ${customerName}! Launching Live Tracker...`);
+
+      trackingStep = 0;
+      openTrackerModal();
+    });
+
+    // 14. Live Delivery Tracking Map Animation
+    function renderTrackingState() {
+      const stage = trackingStages[trackingStep];
+      const basePath = document.getElementById("routeBasePath");
+      const activePath = document.getElementById("routeActivePath");
+      const rider = document.getElementById("riderMarker");
+
+      document.getElementById("trackerOrderTitle").textContent = "Order #" + activeOrderInfo.id;
+      document.getElementById("trackerOrderMeta").textContent = activeOrderInfo.summary;
+      document.getElementById("trackerEta").textContent = stage.eta;
+      document.getElementById("trackerDistance").textContent = stage.dist;
+      document.getElementById("liveStatusText").textContent = stage.msg;
+
+      try {
+        if (basePath && typeof basePath.getTotalLength === "function") {
+          const totalLen = basePath.getTotalLength();
+          if (totalLen > 0) {
+            const pt = basePath.getPointAtLength(totalLen * stage.progress);
+            rider.setAttribute("transform", `translate(${pt.x.toFixed(1)}, ${pt.y.toFixed(1)})`);
+            activePath.style.strokeDasharray = String(totalLen);
+            activePath.style.strokeDashoffset = String(totalLen * (1 - stage.progress));
+          }
+        }
+      } catch (err) {
+        // Safe fallback if SVG geometry is unavailable
+      }
+
+      document.querySelectorAll("#statusSteps .t-step").forEach((el) => {
+        const idx = Number(el.getAttribute("data-step"));
+        el.classList.toggle("active", idx <= trackingStep);
+      });
+
+      const btn = document.getElementById("simulateNextBtn");
+      btn.textContent = trackingStep >= 3 ? "Restart Demo ↻" : "Next Stage ▶";
+    }
+
+    function advanceTrackingStep() {
+      trackingStep = trackingStep >= 3 ? 0 : trackingStep + 1;
+      renderTrackingState();
+    }
+
+    function openTrackerModal() {
+      trackerModal.hidden = false;
+      requestAnimationFrame(renderTrackingState);
+      clearInterval(trackingInterval);
+      trackingInterval = setInterval(() => {
+        if (trackingStep < 3) {
+          trackingStep += 1;
+          renderTrackingState();
+        } else {
+          clearInterval(trackingInterval);
+        }
+      }, 4500);
+    }
+
+    function closeTrackerModal() {
+      trackerModal.hidden = true;
+      clearInterval(trackingInterval);
+    }
+
+    function callRider() {
+      showToast("Calling Delivery Partner Ravi Kumar (+91 98765 43210)...");
+    }
+
+    document.getElementById("openTrackerBtn").addEventListener("click", openTrackerModal);
+    document.getElementById("closeTrackerBtn").addEventListener("click", closeTrackerModal);
+    trackerModal.addEventListener("click", (e) => {
+      if (e.target === trackerModal) closeTrackerModal();
+    });
+
+    // Close modals or cart on Escape key
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        closeCart();
+        closeDishModal();
+        closeCheckoutModal();
+        closeTrackerModal();
+      }
+    });
+
+    // 15. Initialize Application
+    updateLocationUI(citySelect.value);
+    renderCategories();
+    renderFamousFoods();
+    renderRestaurants();
+    renderDishes();
+    updateCartUI();
+  </script>
+</body>
+</html>
